@@ -9,7 +9,7 @@ function diagonal({ source: s, target: t }) {
         ;
 }
 
-const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+const margin = { top: 10, right: 10, bottom: 10, left: 10 };
 
 export default class StaticTreeView extends Component {
     _ref = (node) => {
@@ -73,8 +73,8 @@ export default class StaticTreeView extends Component {
         nodeEnter
             .append('circle')
             .attr('class', 'node')
-            .attr('r', 15)
-            .style('fill', '#fff')
+            .attr('r', 8)
+            // .style('fill', '#fff')
         ;
 
         nodeEnter

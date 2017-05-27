@@ -7,17 +7,26 @@ circle.active {
 }
 
 .node circle {
-    fill: #fff;
-    stroke: steelblue;
-    stroke-width: 3px;
+    fill: steelblue;
 }
 
 .node text {
-    font: 12px sans-serif;
+    font: 10px sans-serif;
+    fill: #fff;
 }
 
 .link {
     fill: none;
     stroke: #ccc;
-    stroke-width: 2px;
+    stroke-width: 1px;
+}
+
+.Steps {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Step {
+    border: 1px solid #eee;
+    transform: scale(1);
 }

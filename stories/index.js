@@ -1,1 +1,2 @@
 import './simpleBinaryTree';
+import './bst';

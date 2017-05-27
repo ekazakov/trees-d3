@@ -55,6 +55,13 @@ export function * iterate(node) {
     }
 }
 
+export function treeHeight(node) {
+    if (!node) return;
+
+    if (node.left) {
+        return
+    }
+}
 
 export function stringify(tree) {
     return JSON.stringify(
