@@ -1,57 +1,101 @@
 import React from 'react';
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import {
-    times,
-    shuffle,
-    flowRight,
     cloneDeep,
 } from 'lodash';
-import StaticTreeView from '../src/Components/StaticTreeView';
 import {
     createBst,
     arrayToBst,
-    bstToHierarchy, put,
+    put,
+    get, findSuccessor, findNode, remove,
 } from '../src/binarySearchTree';
+import { Tree } from '../src/Components/Tree/Tree';
 
-const buildTreeHierarchy = flowRight(
-    bstToHierarchy,
-    arrayToBst,
-);
-
-
-function inorder(tree, depth) {
-
+function Map({ data, children, ...restProps }) {
+    return <div {...restProps}>
+        {data.map(children)}
+    </div>;
 }
 
-storiesOf('BST', module)
-    .add('foo', () => {
-        const data = [7, 22, 45, 5, 8, 32, 9, 11, 16, 7, 2];
-        const treeData = buildTreeHierarchy(data);
-        console.log(treeData);
-        return <div>
+const width = 400;
+const height = 200;
 
-        </div>;
-    })
+storiesOf('BST', module)
     .add('put', () => {
         const tree = createBst();
-        const data = [7, 22, 45, 5, 8, 32, 9, 11, 16, 7, 2];
+        const data = [7, 22, 45, 5, 8, 32, 9, 11, 16, 7, 2, 31];
 
-        const items = data.map((datum, index) => {
-            put(tree, datum, datum);
-            const treeData = bstToHierarchy(cloneDeep(tree));
-            return <div className="Step">
-                <StaticTreeView
-                    key={index}
-                    data={treeData}
-                    width={200}
-                    height={200}
-                />
-            </div>
-        });
+        return <Map data={data} className="Steps">
+            {(datum, index) => {
+                put(tree, datum, datum);
+                const treeCopy = cloneDeep(tree);
 
-        return <div className="Steps">
-            {items}
-        </div>
+                return <div className="Step">
+                    <Tree
+                        key={index}
+                        tree={treeCopy}
+                        width={width}
+                        height={height}
+                    />
+                </div>
+            }}
+        </Map>
     })
+    .add('get', () => {
+        const tree = arrayToBst([7, 22, 45, 5, 8, 32]);
+        const foundKey = get(tree, 8);
+        const visitor = (node) => (foundKey === node.key ? 'found' : '');
 
+        return <Tree
+            tree={tree}
+            width={width}
+            height={height}
+            visitor={visitor}
+        />
+    })
+    .add('findSuccessor', () => {
+        const tree = arrayToBst([ 17, 5, 35, 29, 38, 2, 11, 9, 7, 8, 16]);
+        const data = [17, 5, 35, 11]; //
+
+        return <Map data={data} className="Steps">
+            {(datum, index) => {
+                const foundNode = findSuccessor(findNode(tree, datum));
+                console.log('datum:', datum, 'foundNode:', foundNode);
+                const visitor = (node) => (foundNode === node ? 'found' : '');
+                return <div className="Step" key={index}>
+                    <div>
+                        Successor for: {datum}
+                    </div>
+                    <Tree
+                        tree={tree}
+                        width={width}
+                        height={height}
+                        visitor={visitor}
+                    />
+                </div>
+            }}
+        </Map>
+    })
+    .add('remove', () => {
+        const tree = arrayToBst([ 17, 5, 35, 29, 38, 2, 11, 9, 7, 8, 16, 31]);
+        const itemsToRemove = [null, 5, 35, 17, 11, 16];
+
+        return <Map data={itemsToRemove} className="Steps">
+            {(datum, index) => {
+                if (datum != null) {
+                    remove(tree, datum);
+                }
+
+                return <div className="Step" key={index}>
+                    {datum != null && <div>Remove: {datum} </div>}
+                    <Tree
+                        tree={cloneDeep(tree)}
+                        width={width}
+                        height={height}
+                    />
+                </div>
+            }}
+        </Map>
+
+    })
 ;

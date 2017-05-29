@@ -66,6 +66,18 @@ export const get = (tree, key) => {
     return null;
 };
 
+export const findNode = (tree, key) => {
+    if (tree.root) {
+        const result = _get(tree.root, key);
+
+        if (result) {
+            return result;
+        }
+    }
+
+    return null;
+};
+
 const findMinChild = (node) => {
     let current = node;
     while (current.left) {
@@ -75,7 +87,7 @@ const findMinChild = (node) => {
     return current;
 };
 
-const findSuccessor = (node) => {
+export const findSuccessor = (node) => {
     let successor;
 
     if (node.right) {
@@ -86,7 +98,7 @@ const findSuccessor = (node) => {
                 successor = node.parent;
             } else {
                 node.parent.right = null;
-                findSuccessor(node.parent);
+                successor = findSuccessor(node.parent);
                 node.parent.right = node;
             }
         }

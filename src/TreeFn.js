@@ -1,4 +1,5 @@
 import { hierarchy } from 'd3';
+import { compact } from 'lodash';
 export function createTree(params = {}) {
     return params;
 }
@@ -41,26 +42,27 @@ export const updateData = (tree, params = {}) => {
 };
 
 
-export function * iterate(node) {
+export function * iterate(node, fn = (node) => node.key) {
     if (node) {
         if (node.left) {
-            yield * iterate(node.left);
+            yield * iterate(node.left, fn);
         }
 
-        yield node.key;
+        yield fn(node);
 
         if (node.right) {
-            yield * iterate(node.right);
+            yield * iterate(node.right, fn);
         }
     }
 }
 
 export function treeHeight(node) {
-    if (!node) return;
+    if (!node) return -1;
 
-    if (node.left) {
-        return
-    }
+    return Math.max(
+        treeHeight(node.left),
+        treeHeight(node.right)
+    ) + 1;
 }
 
 export function stringify(tree) {
@@ -75,15 +77,23 @@ export function stringify(tree) {
     );
 }
 
-function traversePreorder(tree, cb) {
-    if (!tree) {
-        return;
-    }
-
-    cb(tree);
-    traversePreorder(tree.left, cb);
-    traversePreorder(tree.right, cb);
+export function edges(tree) {
+    return compact([...iterate(tree, (node) => {
+        if (node.parent) {
+            return { from: node.parent, to: node }
+        }
+    })])
 }
+
+// function traversePreorder(tree, cb) {
+//     if (!tree) {
+//         return;
+//     }
+//
+//     cb(tree);
+//     traversePreorder(tree.left, cb);
+//     traversePreorder(tree.right, cb);
+// }
 
 export function toHierarchy(tree) {
     return hierarchy(tree, (data) => {
@@ -93,4 +103,25 @@ export function toHierarchy(tree) {
 
         return children.length > 0 ? children : null
     })
+}
+
+export function prepareTree(tree, width, height) {
+    const levelHeight = height / (treeHeight(tree.root) || 1);
+
+    addTreeViewData(tree.root, 0, width);
+
+    function addTreeViewData(tree, from, to, depth = 0) {
+        tree.depth = depth;
+        tree.height = treeHeight(tree);
+        tree.x = (from + to) / 2;
+        tree.y = levelHeight * depth;
+
+        if (tree.left) {
+            addTreeViewData(tree.left, from, (from + to) / 2, depth + 1);
+        }
+
+        if (tree.right) {
+            addTreeViewData(tree.right, (from + to) / 2, to, depth + 1);
+        }
+    }
 }
