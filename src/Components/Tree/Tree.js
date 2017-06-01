@@ -3,13 +3,19 @@ import { edges, iterate, prepareTree } from '../../TreeFn';
 import classNames from 'classnames';
 import { noop } from 'lodash';
 
-export function Node({ x, y, value, className = '' }) {
+export function Node({ x, y, value, balanceFactor, className = '' }) {
     return (
         <g className={classNames('node', className)} transform={`translate(${x}, ${y})`}>
             <circle className="node" r="10" />
             <text dy=".35em" textAnchor="middle">
                 {value}
             </text>
+            <text
+                className="balance"
+                transform={`translate(15, 0)`}
+            >
+                {balanceFactor}
+                </text>
         </g>
     );
 }

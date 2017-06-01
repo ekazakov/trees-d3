@@ -16,6 +16,10 @@ circle.active {
     fill: #fff;
 }
 
+.node .balance {
+    fill: #000;
+}
+
 .found circle {
     fill: green;
 }
