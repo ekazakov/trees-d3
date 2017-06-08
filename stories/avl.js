@@ -1,8 +1,12 @@
 import React from 'react';
 import { storiesOf } from '@kadira/storybook';
 import {
-    arrayToAvl, createAvl,
-    put, rotateLeft, rotateRight,
+    arrayToAvl,
+    createAvl,
+    put,
+    rotateLeft,
+    rotateRight,
+    remove,
 } from '../src/avlTree';
 import { Tree } from '../src/Components/Tree/Tree';
 import { cloneDeep } from 'lodash';
@@ -16,7 +20,8 @@ function Map({ data, children, ...restProps }) {
 const width = 400;
 const height = 200;
 
-storiesOf('AVL Tree', module)
+const stories = storiesOf('AVL Tree', module);
+stories
     .add('put', () => {
         // const trees = [
         //     arrayToAvl([18, 11, 10]),
@@ -31,9 +36,6 @@ storiesOf('AVL Tree', module)
 
         return <Map data={data} className="Steps">
             {(datum, index) => {
-                if (datum === 23) {
-                    debugger;
-                }
                 put(tree, datum, datum);
                 const treeCopy = cloneDeep(tree);
                 return <div className="Step" key={index}>
@@ -112,3 +114,42 @@ storiesOf('AVL Tree', module)
         </Map>;
     })
 ;
+
+const removeCases = [
+    // { datum: [20, 15], toRemove: 15 },
+    // { datum: [20, 15, 10], toRemove: 10 },
+    // { datum: [20, 22, 10, 15], toRemove: 10 },
+    // { datum: [20, 22, 10, 15, 9], toRemove: 10 },
+    { datum: [20, 22, 10, 15, 9], toRemove: 22 },
+    // case for successor
+    // case for removing root
+    // { datum: [20, 15, 10, 8, 9, 11, 10, 5], toRemove: 5 },
+];
+
+stories.add('remove', () => {
+    return <Map data={removeCases} className="Steps">
+        {({ datum, toRemove }, index) => {
+            const tree = arrayToAvl(datum);
+            const treeCopy = cloneDeep(tree);
+            remove(treeCopy, toRemove);
+
+            return (
+                <div className="Step" key={index}>
+                    <div>
+                        Case #{index}
+                    </div>
+                    <div className="Steps">
+                        <div>
+                            <p>before</p>
+                            <Tree tree={tree} width={width} height={height} />
+                        </div>
+                        <div>
+                            <p>after</p>
+                            <Tree tree={treeCopy} width={width} height={height} />
+                        </div>
+                    </div>
+                </div>
+            );
+        }}
+    </Map>
+});

@@ -38,4 +38,5 @@ circle.active {
 .Step {
     border: 1px solid #eee;
     transform: scale(1);
+    font-size: 12px;
 }

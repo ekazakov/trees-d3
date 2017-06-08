@@ -40,7 +40,7 @@ export const put = (tree, key, value) => {
     tree.size++;
 };
 
-const _get = (tree, key) => {
+export const _get = (tree, key) => {
     if (!tree) {
         return null;
     }
@@ -107,7 +107,7 @@ export const findSuccessor = (node) => {
     return successor;
 };
 
-const spliceOut = (node) => {
+export const spliceOut = (node) => {
     if (isLeaf(node)) {
         if (node.parent.left === node) {
             node.parent.left = null;
