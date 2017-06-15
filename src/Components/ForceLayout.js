@@ -2,30 +2,9 @@ import vis from 'vis';
 import 'vis/dist/vis.css';
 import React, { Component } from 'react';
 
-const nodes = new vis.DataSet([
-    {
-        id: 1, label: 'Node 1',
-        color: {
-            border: 'red'
-        }
-    },
-    {id: 2, label: 'Node 2'},
-    {id: 3, label: 'Node 3'},
-    {id: 4, label: 'Node 4'},
-    {id: 5, label: 'Node 5'}
-]);
-
-// create an array with edges
-const edges = new vis.DataSet([
-    // {from: 1, to: 3},
-    // {from: 2, to: 3},
-    // {from: 0, to: 1},
-    // {from: 2, to: 0},
-]);
-
 const options = {
     layout: {
-        randomSeed: 634765
+        randomSeed: 598617
     },
     nodes: {
         borderWidth: 1,
@@ -42,7 +21,9 @@ const options = {
     },
     edges: {
         arrows: {
-            to: true
+            to: { scaleFactor: 0.5 },
+            from: { scaleFactor: 0.5 },
+
         },
         color: {
             color: '#222'
@@ -59,10 +40,10 @@ const options = {
 };
 
 export default class ForceLayout extends Component {
-    static defaultProps = {
-        edges,
-        nodes,
-    };
+    // static defaultProps = {
+    //     edges,
+    //     nodes,
+    // };
 
     componentDidMount() {
         const { nodes, edges } = this.props;
@@ -83,13 +64,13 @@ export default class ForceLayout extends Component {
     };
 
     render() {
-        const { width, height } = this.props;
+        const { width, height, className } = this.props;
         const style = {
             width,
             height,
             border: '1px solid #323232',
         };
 
-        return <div style={style} ref={this._ref} />;
+        return <div style={style} className={className} ref={this._ref} />;
     }
 }

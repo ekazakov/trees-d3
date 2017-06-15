@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@kadira/storybook": "^2.35.3"
+    "@kadira/storybook": "^2.35.3",
+    "babel-polyfill": "6.23.0",
+    "babel-runtime": "6.23.0"
   },
   "dependencies": {
     "classnames": "2.2.5",
